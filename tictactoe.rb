@@ -1,14 +1,3 @@
-puts 'Welcome to Tic Tac Toe!'
-puts 'First Player, Do you want to be X or O?'
-
-player1_pos = nil
-until player1_pos == 'x' || player1_pos == 'o'
-  puts 'Please type "x" or "o"'
-  player1_pos = gets.chomp.downcase
-end
-
-player1_pos == 'x' ? player2_pos = 'o' : player2_pos = 'x'
-
 class Player
   attr_accessor :pos
   @@player_count = 0
@@ -41,6 +30,34 @@ class Board
     puts "|#{@first}|#{@second}|#{@third}|"
     puts "|#{@forth}|#{@fifth}|#{@sixth}|"
     puts "|#{@seventh}|#{@eighth}|#{@ninth}|"
+  end
+
+  def game_over?(pp)
+    if game_won?(pp)
+      return true
+    elsif game_tie?
+      return true
+    else
+      return false
+    end
+  end
+
+  def game_won? pp
+    if (@first == pp && @second == pp && @third == pp) || (@forth == pp && @fifth == pp && @sixth == pp) ||
+      (@seventh == pp && @eighth == pp && @ninth == pp) || (@first == pp && @forth == pp && @seventh == pp) ||
+      (@second == pp && @fifth == pp && @eighth == pp) || (@third == pp && @sixth == pp && @ninth == pp) ||
+      (@first == pp && @fifth == pp && @ninth == pp) || (@third == pp && @fifth == pp && @seventh == pp)
+      return true
+    end
+  end
+
+  def game_tie?
+    (1..9).to_a.each do |n|
+      if empty?(n) == false
+        return false
+      end
+    end
+    return true
   end
 
   def empty? number
@@ -92,19 +109,6 @@ class Board
   end
 end
 
-player1 = Player.new(player1_pos)
-player2 = Player.new(player2_pos)
-board = Board.new
-
-puts `clear`
-puts "Player1 is: #{player1_pos}"
-puts "Player2 is: #{player2_pos}"
-
-game_lost = false
-game_tie = false
-game_won = true
-
-
 
 
 def get_pos_answer (player)
@@ -118,13 +122,40 @@ def get_pos_answer (player)
   return pos_answer.to_i
 end
 
-while game_won
+puts 'Welcome to Tic Tac Toe!'
+puts 'First Player, Do you want to be X or O?'
+
+player1_pos = nil
+until player1_pos == 'x' || player1_pos == 'o'
+  puts 'Please type "x" or "o"'
+  player1_pos = gets.chomp.downcase
+end
+
+player1_pos == 'x' ? player2_pos = 'o' : player2_pos = 'x'
+
+
+player1 = Player.new(player1_pos)
+player2 = Player.new(player2_pos)
+board = Board.new
+
+puts `clear`
+puts "Player1 is: #{player1_pos}"
+puts "Player2 is: #{player2_pos}"
+
+
+while true
   board.show
   player1_choice = nil
   while !(board.empty?(player1_choice))
     player1_choice = get_pos_answer(player1)
   end
-  board.play(player1_choice,player1_pos) 
+  board.play(player1_choice,player1_pos)
+  if board.game_over?(player1_pos) == true
+    puts `clear`
+    board.show
+    puts 'Player 1 has won!'
+    break
+  end
   puts `clear`
   board.show
   player2_choice = nil
@@ -132,5 +163,11 @@ while game_won
     player2_choice = get_pos_answer(player2)
   end
   board.play(player2_choice,player2_pos) 
+  if board.game_over?(player2_pos) == true
+    puts `clear`
+    board.show
+    puts 'Player 2 has won!'
+    break
+  end
   puts `clear`
 end
