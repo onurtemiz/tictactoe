@@ -34,9 +34,9 @@ class Board
 
   def game_over?(pp)
     if game_won?(pp)
-      return true
-    elsif game_tie?
-      return true
+      return 'won'
+    elsif game_tie?()
+      return 'tie'
     else
       return false
     end
@@ -52,8 +52,8 @@ class Board
   end
 
   def game_tie?
-    (1..9).to_a.each do |n|
-      if empty?(n) == false
+    [1,2,3,4,5,6,7,8,9].each do |n|
+      if empty?(n) == true
         return false
       end
     end
@@ -150,10 +150,15 @@ while true
     player1_choice = get_pos_answer(player1)
   end
   board.play(player1_choice,player1_pos)
-  if board.game_over?(player1_pos) == true
+  if board.game_over?(player1_pos) == 'won'
     puts `clear`
     board.show
     puts 'Player 1 has won!'
+    break
+  elsif board.game_over?(player1_pos) == 'tie'
+    puts `clear`
+    board.show
+    puts 'Tie!'
     break
   end
   puts `clear`
@@ -163,10 +168,15 @@ while true
     player2_choice = get_pos_answer(player2)
   end
   board.play(player2_choice,player2_pos) 
-  if board.game_over?(player2_pos) == true
+  if board.game_over?(player2_pos) == 'won'
     puts `clear`
     board.show
     puts 'Player 2 has won!'
+    break
+  elsif board.game_over?(player2_pos) == 'tie'
+    puts `clear`
+    board.show
+    puts 'Tie!'
     break
   end
   puts `clear`
